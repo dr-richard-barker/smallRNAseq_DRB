@@ -1,4 +1,4 @@
-# smrRNAseq
+# smallRNAseq
 GeneLab bioinformatics processing pipeline for NF_smRNAseq analysis
 The document XXXX holds an overview and example commands for how GeneLab processes small RNAseq datasets. 
 See the Repository Links descriptions below for more information. 
