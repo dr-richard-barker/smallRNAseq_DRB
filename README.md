@@ -7,6 +7,8 @@ Processed data output files and processing code will provided for each GLDS data
 Repository Links
 Pipeline_XXXX_Versions
 
+smallRNAseq analysis pipeline_v1_NF_smRNAseq.png
+
 Contains the current and previous GeneLab small RNAseq data processing pipeline (NF_smrnaseq) versions documentation
 XXX_Workflow_Documentation
 
