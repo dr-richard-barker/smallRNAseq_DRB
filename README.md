@@ -12,4 +12,4 @@ XXX_Workflow_Documentation
 
 Contains instructions for installing and running the GeneLab NF_smRNAseq workflow
 Developed and maintained by:
-Richard Barker
+Richard John Barker
