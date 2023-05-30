@@ -1,0 +1,291 @@
+## First log onto the data processing server (N288 cluster). 
+Navigate to the test folder via commandline.
+The commands should run in a bash / conda environment.
+
+First compile your run sheet from a GLDS / OSDR archive. 
+This can be achived using dp_tools.
+Location of dp_tools on dp_server /global/smf/miniconda38_admin/envs/dp_tools_04-2022
+
+##
+---
+# More infromation found at dp_tools -> https://j-81.github.io/dp_tools/dp_tools.html
+# Import the necessary modules
+import dp_tools
+
+# Define the accession you want to download
+accession = "GLDS-123"
+
+# Access the GLDS ISA archive and retrieve the metadata for the accession
+metadata = dp_tools.get_isa(accession)
+
+# Download the raw data associated with the accession
+file_paths = dp_tools.download(accession)
+
+# Convert the metadata and raw data into a bulkRNAseq runsheet
+runsheet = dp_tools.runsheet(metadata, file_paths)
+
+# Save the runsheet data to a file
+runsheet.to_csv("runsheet.csv", index=False)
+
+##
+---
+## The Following bash script should install all dependancies (eg conda) and then 
+
+```bash
+#!/bin/bash
+
+# Install conda
+# Check the latest version of Miniconda at https://docs.conda.io/en/latest/miniconda.html
+wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh
+bash miniconda.sh -b -p $HOME/miniconda
+rm miniconda.sh
+eval "$($HOME/miniconda/bin/conda shell.bash hook)"
+conda init
+
+# Create a new conda environment
+conda create -n my_env python=3.8
+
+# Activate the conda environment
+conda activate my_env
+
+# Install FastQC
+conda install -c bioconda fastqc
+
+# Install FastP
+conda install -c bioconda fastp
+
+# Install Bowtie2
+conda install -c bioconda bowtie2
+
+# Install SAMtools
+conda install -c bioconda samtools
+
+# Install featureCounts
+conda install -c bioconda subread
+
+# Install edgeR
+conda install -c bioconda bioconductor-edger
+
+# Install Bowtie
+conda install -c bioconda bowtie
+
+# Install mirtop
+conda install -c bioconda mirtop
+
+# Install miRDeep2
+conda install -c bioconda mirdeep2
+
+# Install miRTrace
+conda install -c bioconda mirtrace
+
+# Install MultiQC
+conda install -c bioconda multiqc
+
+# Install R and required packages for edgeR
+conda install -c r r-base
+conda install -c r r-essentials
+conda install -c r r-gplots
+conda install -c r r-rcolorbrewer
+conda install -c r r-reshape2
+conda install -c r r-ggplot2
+
+## Optional Deactivate the conda environment
+# conda deactivate
+```
+
+###
+---
+## These codes will then take the runsheet, use it to guide alignment. 
+
+# Example runsheet
+path/to/"Example runsheet"
+
+# Input files
+path/to/sample1.fastq.gz
+path/to/sample2.fastq.gz
+path/to/sample3.fastq.gz
+
+# Reference files
+reference.fasta
+mature_miRNAs.fasta
+hairpins.fasta
+hairpins.gff
+mature_miRNAs.gff
+reference_genome.fasta
+
+--
+# "Core smallRNAseq Input Parameters"
+# Modify these parameters as needed for your specific analysis
+# More information about parameters can found at NF_core small RNAseq website -> https://nf-co.re/smrnaseq/2.2.1/parameters
+adapter_sequence=AGATCGGAAGAGCACACGTCTGAACTCCAGTCAC
+min_read_length=18
+min_base_quality=20
+min_mapping_quality=20
+isomir_threshold=0.1
+novel_miRNA_threshold=5
+p_value_cutoff=0.05
+log2_fold_change_cutoff=1
+
+---
+## Outputs
+--- 
+
+# FastQC
+output/fastqc/sample1_fastqc.html
+output/fastqc/sample1_fastqc.zip
+output/fastqc/sample2_fastqc.html
+output/fastqc/sample2_fastqc.zip
+output/fastqc/sample3_fastqc.html
+output/fastqc/sample3_fastqc.zip
+
+# FastP
+output/fastp/sample1_trimmed.fastq.gz
+output/fastp/sample1_report.html
+output/fastp/sample1_report.json
+output/fastp/sample2_trimmed.fastq.gz
+output/fastp/sample2_report.html
+output/fastp/sample2_report.json
+output/fastp/sample3_trimmed.fastq.gz
+output/fastp/sample3_report.html
+output/fastp/sample3_report.json
+
+# Bowtie2
+output/bowtie2/sample1_sorted.bam
+output/bowtie2/sample1_sorted.bam.bai
+output/bowtie2/sample2_sorted.bam
+output/bowtie2/sample2_sorted.bam.bai
+output/bowtie2/sample3_sorted.bam
+output/bowtie2/sample3_sorted.bam.bai
+
+# Bowtie
+output/bowtie/mature_miRNAs/sample1.sam
+output/bowtie/mature_miRNAs/sample2.sam
+output/bowtie/mature_miRNAs/sample3.sam
+output/bowtie/hairpins/sample1.sam
+output/bowtie/hairpins/sample2.sam
+output/bowtie/hairpins/sample3.sam
+
+# SAMtools
+output/bowtie/mature_miRNAs/sample1_sorted.bam
+output/bowtie/mature_miRNAs/sample1_sorted.bam.bai
+output/bowtie/mature_miRNAs/sample2_sorted.bam
+output/bowtie/mature_miRNAs/sample2_sorted.bam.bai
+output/bowtie/mature_miRNAs/sample3_sorted.bam
+output/bowtie/mature_miRNAs/sample3_sorted.bam.bai
+output/bowtie/hairpins/sample1_sorted.bam
+output/bowtie/hairpins/sample1_sorted.bam.bai
+output/bowtie/hairpins/sample2_sorted.bam
+output/bowtie/hairpins/sample2_sorted.bam.bai
+output/bowtie/hairpins/sample3_sorted.bam
+output/bowtie/hairpins/sample3_sorted.bam.bai
+output/featureCounts/sample1_counts.txt
+output/featureCounts/sample2_counts.txt
+output/featureCounts/sample3_counts.txt
+
+# edgeR
+output/edgeR/normalized_counts.txt
+output/edgeR/mds_plot.pdf
+output/edgeR/sample_pairwise_distance_heatmap.pdf
+output/edgeR/differentially_expressed_miRNAs.txt
+
+# Bowtie
+output/bowtie/reference_genome/sample1.sam
+output/bowtie/reference_genome/sample2.sam
+output/bowtie/reference_genome/sample3.sam
+
+# mirtop
+output/mirtop/sample1_isomirs.gff3
+output/mirtop/sample1_mature.gff3
+output/mirtop/sample2_isomirs.gff3
+output/mirtop/sample2_mature.gff3
+output/mirtop/sample3_isomirs.gff3
+output/mirtop/sample3_mature.gff3
+
+# miRDeep2
+output/miRDeep2/miRNAs_expressed_all_samples.txt
+output/miRDeep2/miRNAs_expressed_in_each_sample.txt
+output/miRDeep2/miRNA_annotation.txt
+output/miRDeep2/novel_miRNA_prediction.txt
+
+# miRTrace
+output/miRTrace/sample1_report.html
+output/miRTrace/sample2_report.html
+output/miRTrace/sample3_report.html
+
+# MultiQC
+output/multiqc_report.html
+``` 
+
+
+## To use these codes on the GL DP cluster it needs to be wrappted in a SLURM code
+---
+
+#!/bin/bash
+#
+#SBATCH --job-name="smallRNAseq_OSDR_###"
+#SBATCH --output=smallRNAseq_OSDR_###.out
+#SBATCH --partition=normal
+#SBATCH --mem=10000
+ 
+#
+#SBATCH --mail-user=XXXXXXX@nasa.gov
+#SBATCH --mail-type=END
+ 
+ 
+. ~/.XXXXXXXprofile
+ 
+ 
+echo "smallRNAseq_OSDR_###_report"
+echo ""
+ 
+ 
+start=$(date +%s)
+echo "start time: $start"
+echo $HOSTNAME_XXXXXX
+ 
+ 
+# example activating appropriate conda environment
+source activate  /global/smf/miniconda38_admin/envs/dp_tools_04-2022
+ 
+ 
+## move runsheet and paramters files to in_dir 
+
+in_dir=/global/data/Data_Processing/TEMP_Home/XXXXXXX/RNAseq_test/smallRNAseq_OSDR_###
+ 
+out_dir=/global/data/Data_Processing/TEMP_Home/XXXXXXXX/RNAseq_test/smallRNAseq_OSDR_###_output/_report
+ 
+ 
+ 
+echo ""
+echo "smallRNAseq_OSDR_###: version 2.0 "
+smallRNAseq_OSDR_### --version
+echo ""
+ 
+ 
+call="path/to/"Example runsheet" "Core smallRNAseq Input Parameters"  -o $out_dir $in_dir/"
+ 
+ 
+echo $call
+echo ""
+eval $call
+ 
+ 
+echo ""
+end=$(date +%s)
+echo "end time: $end"
+ 
+runtime_s=$(echo $(( end - start )))
+echo "total run time(s): $runtime_s"
+ 
+sec_per_min=60
+sec_per_hr=3600
+ 
+runtime_m=$(echo "scale=2; $runtime_s / $sec_per_min;" | bc)
+ 
+echo "total run time(m): $runtime_m"
+runtime_h=$(echo "scale=2; $runtime_s / $sec_per_hr;" | bc)
+echo "total run time(h): $runtime_h"
+ 
+ 
+echo ""
+echo "slurm job ID: ${SLURM_JOB_ID}"
