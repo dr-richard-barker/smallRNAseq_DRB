@@ -1,5 +1,5 @@
 # smallRNAseq
-GeneLab bioinformatics processing pipeline for NF_smRNAseq analysis
+Practice making a 'GeneLab' stlye bioinformatics processing pipeline for NF_smRNAseq analysis
 The document XXXX holds an overview and example commands for how GeneLab processes small RNAseq datasets. 
 See the Repository Links descriptions below for more information. 
 Processed data output files and processing code will provided for each GLDS dataset along with the processed data in the GeneLab Data Systems (GLDS) repository.
