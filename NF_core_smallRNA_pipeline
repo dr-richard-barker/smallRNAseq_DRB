@@ -6,7 +6,9 @@ Install nextflow (>=20.04.0)
 Install any of Docker, Singularity, Podman, Shifter or Charliecloud for full pipeline reproducibility (please only use Conda as a last resort; see docs)
 Download the pipeline and test it on a minimal dataset with a single command:
 nextflow run nf-core/smrnaseq -profile test,<docker/singularity/podman/shifter/charliecloud/conda/institute>
-Please check nf-core/configs to see if a custom config file to run nf-core pipelines already exists for your Institute. If so, you can simply use -profile <institute> in your command. This will enable either docker or singularity and set the appropriate execution settings for your local compute environment.
+Please check nf-core/configs to see if a custom config file to run nf-core pipelines already exists for your Institute. 
+If so, you can simply use -profile <institute> in your command. 
+This will enable either docker or singularity and set the appropriate execution settings for your local compute environment.
 Start running your own analysis!
 nextflow run nf-core/smrnaseq -profile <docker/singularity/podman/shifter/charliecloud/conda/institute> --input '*_R{1,2}.fastq.gz' --genome GRCh37
 See usage docs for all of the available options when running the pipeline.
