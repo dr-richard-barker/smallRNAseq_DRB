@@ -5,6 +5,16 @@ By seamlessly integrating mirnaQC, sRNAbench, sRNAde, and mirNOVO, researchers c
 
 Materials and Methods:
 
+**Table 1:** 
+| Tool       | Software Inputs      | Data Products Format       | Comments / Function                                        | Plants/Animals | Open-Source Software | Research Paper Reference (First Authors, Year, Weblink)                                   |
+|------------|----------------------|----------------------------|------------------------------------------------------------|----------------|----------------------|---------------------------------------------------------------------------------------------|
+| mirnaQC    | FASTQ files          | BAM files, QC reports      | Pre-processing and quality control for miRNA-seq data     | Both           | FASTX                | Alexandrov et al. (2010) [Link](https://academic.oup.com/nar/article/48/W1/W262/5850310) |
+| sRNAbench  | FASTQ files          | FASTQ files, BAM files, count tables | miRNA annotation, differential expression analysis   | Both           | Python (PySAM, HTSeq) | Langenberger et al. (2013) [Link](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6602500/) |
+| sRNAblast  | FASTQ files          | BLAST report, alignments    | miRNA target prediction                                    | Both           | C++                  | Wei et al. (2014) [Link](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5353976/)           |
+| mirNOVO    | FASTQ files          | Novel miRNA candidates, FASTA files | De novo miRNA discovery                              | Both           | Python (HTSeq)       | Bonnet et al. (2010) [Link](https://github.com/dvitsios/mirnovo)                           |
+| sRNAde     | counts.txt, factors.txt | Differential expression analysis results, plots | Differential expression analysis for small RNAs | Both           | R (DESeq2, edgeR, ANOVA) intersect analysis | Anders et al. (2010) [Link](https://bioconductor.org/packages/devel/bioc/vignettes/DESeq2/inst/doc/DESeq2.html) |
+
+
 **Data Acquisition and Preprocessing:** Identify relevant data sets in NCBI-SRA using GEO accession numbers or keywords.
 Download SRA files using the sra-tools toolkit and convert them to FASTQ format with fastq-dump or GeneLab API.
 Employ mirnaQC on FASTQ files for adapter trimming, sequence quality analysis, and identification of potential contaminants.
@@ -21,21 +31,19 @@ Visualize differential expression patterns using heat maps, volcano plots, and e
 Analyze secondary hairpin structures, flanking genomic regions, and evolutionary conservation within miRNA families.
 Validate potential novel miRNAs by quantitative real-time PCR (qPCR) or other experimental methods.
 
+**To achieve this, we need some additional information:**
 
-**Table 1:** 
-| Tool       | Software Inputs      | Data Products Format       | Comments / Function                                        | Plants/Animals | Open-Source Software | Research Paper Reference (First Authors, Year, Weblink)                                   |
-|------------|----------------------|----------------------------|------------------------------------------------------------|----------------|----------------------|---------------------------------------------------------------------------------------------|
-| mirnaQC    | FASTQ files          | BAM files, QC reports      | Pre-processing and quality control for miRNA-seq data     | Both           | FASTX                | Alexandrov et al. (2010) [Link](https://academic.oup.com/nar/article/48/W1/W262/5850310) |
-| sRNAbench  | FASTQ files          | FASTQ files, BAM files, count tables | miRNA annotation, differential expression analysis   | Both           | Python (PySAM, HTSeq) | Langenberger et al. (2013) [Link](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6602500/) |
-| sRNAblast  | FASTQ files          | BLAST report, alignments    | miRNA target prediction                                    | Both           | C++                  | Wei et al. (2014) [Link](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5353976/)           |
-| mirNOVO    | FASTQ files          | Novel miRNA candidates, FASTA files | De novo miRNA discovery                              | Both           | Python (HTSeq)       | Bonnet et al. (2010) [Link](https://github.com/dvitsios/mirnovo)                           |
-| sRNAde     | counts.txt, factors.txt | Differential expression analysis results, plots | Differential expression analysis for small RNAs | Both           | R (DESeq2, edgeR, ANOVA) intersect analysis | Anders et al. (2010) [Link](https://bioconductor.org/packages/devel/bioc/vignettes/DESeq2/inst/doc/DESeq2.html) |
-
-
-
-
-To achieve this, we need some additional information:
 **Specific SRA ID:** Replace {sra_id} in the download_sra rule with the actual SRA accession number you want to download.
+
+                                                SRA FASTQ download
+                                                      |
+                                                      V
+               _______________________________________________________
+               |                           |                         |                         
+               V                           V                         V                         
+  ![Rough_plan](https://github.com/dr-richard-barker/smrRNAseq/assets/8679982/e4393c74-33c0-475a-8e14-8f7f457cfe57)
+
+
 Sample names: Replace {sample} in all rules with the names of your individual samples (replacements should be consistent across rules).
 Custom script for merging tables: Provide the script content for custom_script.py to merge the sRNAbench and mirNOVO outputs. 
 This script should parse both files, identify matching miRNAs, and create a merged table with count or expression data for all miRNAs (including novel ones).
@@ -45,7 +53,7 @@ Target gene reference: Specify the filename and format of your target gene refer
 
 **Installing mirnaQC**
 
-There are two main ways to install mirnaQC:
+There are two main ways to install mirnaQC or use their premade webtool (https://arn.ugr.es/mirnaqc/):
 **1. Docker:**
 This is the recommended method for most users. It ensures you have all necessary dependencies installed without modifying your system environment.
 Bash
@@ -253,7 +261,17 @@ Target prediction table: (Optional) Tabular file summarizing predicted target ge
 
 —-
 
-Snakemate
+**Results and Discussion:**
+
+This multi-tool approach offers a comprehensive analysis of small RNA-seq data, yielding valuable insights into:
+Global miRNA expression profiles across samples and conditions.
+Putative novel miRNAs potentially involved in regulation and function.
+Differentially expressed miRNAs associated with biological processes of interest.
+By integrating these tools, researchers can navigate from raw NCBI-SRA data to a deeper understanding of small RNA biology in diverse research fields, including plant development, stress responses, and human disease. 
+
+--
+
+## Snakemate can be used to automate this analysis
 
 **Snakefile Structure:**
 
@@ -269,7 +287,8 @@ Snakemake will automatically download data, run tools, parse outputs, and comple
 
 ## Future work / Example snakemate script. 
 
-a) Downloading SRA data:
+```
+#a) Downloading SRA data:
 Python
 rule download_sra:
   input:
@@ -277,7 +296,7 @@ rule download_sra:
   shell:
     "sra-tools fastq-dump {input.sra} -O {output}"
 
-b) Running mirnaQC:
+#b) Running mirnaQC:
 Python
 rule mirnaqc:
   input:
@@ -288,7 +307,7 @@ rule mirnaqc:
   shell:
     "mirnaQC -i {input.fastq} -o {output.qc_report} -b {output.bam}"
 
-c) sRNAbench Analysis:
+#c) sRNAbench Analysis:
 Python
 rule srnabench:
   input:
@@ -298,7 +317,7 @@ rule srnabench:
   shell:
     "sRNAbench -b {input.bam} -o {output.count_table}"
 
-d) mirNOVO for Novel miRNAs:
+#d) mirNOVO for Novel miRNAs:
 Python
 rule mirnovo:
   input:
@@ -308,7 +327,7 @@ rule mirnovo:
   shell:
     "mirNOVO -i {input.fastq} -o {output.novel_miRNAs}"
 
-e) Merging Expression Tables:
+#e) Merging Expression Tables:
 Python
 rule merge_tables:
   input:
@@ -319,7 +338,7 @@ rule merge_tables:
   shell:
     "custom_script.py {input.srnabench} {input.mirnovo} > {output.merged_table}"
 
-f) Differential Expression Analysis:
+#f) Differential Expression Analysis:
 Python
 rule srnade:
   input:
@@ -330,7 +349,7 @@ rule srnade:
   shell:
     "sRNAde -i {input.merged_table} -f {input.factors} -o {output.de_results}"
 
-g) sRNAblast Target Prediction:
+#g) sRNAblast Target Prediction:
 Python
 rule srnablast:
   input:
@@ -339,16 +358,8 @@ rule srnablast:
     targets = "{sample}_targets.txt"
   shell:
     "sRNAblast -i {input.de_miRNAs} -t target_genes.fa -o {output.targets}"
+```
 
-
-
-**Results and Discussion:**
-
-This multi-tool approach offers a comprehensive analysis of small RNA-seq data, yielding valuable insights into:
-Global miRNA expression profiles across samples and conditions.
-Putative novel miRNAs potentially involved in regulation and function.
-Differentially expressed miRNAs associated with biological processes of interest.
-By integrating these tools, researchers can navigate from raw NCBI-SRA data to a deeper understanding of small RNA biology in diverse research fields, including plant development, stress responses, and human disease. 
 
 
 **Conclusion:**
@@ -379,5 +390,82 @@ Anders et al. (2010) https://bioconductor.org/packages/devel/bioc/vignettes/DESe
 
 Lebrón, R., et al.  (2019). SRNAbench and sRNAtoolbox 2019: Intuitive fast small RNA profiling and differential expression. Nucleic Acids Research, 47(W1), W530-W535. https://doi.org/10.1093/nar/gkz415
 
+
+
+Tool summary from GPPT4.0
+
++-----------------------------------------------------+
+|                        mirnaQC                      |
++-----------------------------------------------------+
+| Inputs:                 | Outputs:                 |
+| - FASTQ files           | - BAM files              |
+|                         | - QC reports             |
+| Function:               |                           |
+| Pre-processing and      |                           |
+| quality control for     |                           |
+| miRNA-seq data          |                           |
+| Plants/Animals: Both    | Open-Source: FASTX       |
+| Research Paper:         | Alexandrov et al. (2010) |
+| https://academic.oup.com/nar/article/48/W1/W262/5850310 |
++-----------------------------------------------------+
+
++-----------------------------------------------------+
+|                      sRNAbench                      |
++-----------------------------------------------------+
+| Inputs:                 | Outputs:                 |
+| - FASTQ files           | - FASTQ files            |
+|                         | - BAM files              |
+|                         | - Count tables           |
+| Function:               |                           |
+| miRNA annotation,       |                           |
+| differential expression|                           |
+| analysis                |                           |
+| Plants/Animals: Both    | Open-Source: Python      |
+|                         | (PySAM, HTSeq)           |
+| Research Paper:         | Langenberger et al. (2013) |
+| https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6602500/ |
++-----------------------------------------------------+
+
++-----------------------------------------------------+
+|                      sRNAblast                      |
++-----------------------------------------------------+
+| Inputs:                 | Outputs:                 |
+| - FASTQ files           | - BLAST report           |
+|                         | - Alignments             |
+| Function:               |                           |
+| miRNA target prediction |                           |
+| Plants/Animals: Both    | Open-Source: C++         |
+| Research Paper:         | Wei et al. (2014)        |
+| https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5353976/ |
++-----------------------------------------------------+
+
++-----------------------------------------------------+
+|                       mirNOVO                       |
++-----------------------------------------------------+
+| Inputs:                 | Outputs:                 |
+| - FASTQ files           | - Novel miRNA candidates |
+|                         | - FASTA files            |
+| Function:               |                           |
+| De novo miRNA discovery |                           |
+| Plants/Animals: Both    | Open-Source: Python (HTSeq) |
+| Research Paper:         | Bonnet et al. (2010)     |
+| https://github.com/dvitsios/mirnovo                 |
++-----------------------------------------------------+
+
++-----------------------------------------------------+
+|                        sRNAde                       |
++-----------------------------------------------------+
+| Inputs:                 | Outputs:                 |
+| - counts.txt            | - Differential expression|
+| - factors.txt           |   analysis results       |
+|                         | - Plots                  |
+| Function:               |                           |
+| Differential expression |                           |
+| analysis for small RNAs |                           |
+| Plants/Animals: Both    | Open-Source: R           |
+|                         | (DESeq2, edgeR, ANOVA)   |
+| Research Paper:         | Anders et al. (2010)     |
+| https://bioconductor.org/packages/devel/bioc/vignettes/DESeq2/inst/doc/DESeq2.html |
++-----------------------------------------------------+
 
 
