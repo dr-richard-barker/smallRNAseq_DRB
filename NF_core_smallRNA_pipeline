@@ -1,4 +1,4 @@
-Note: This planned GeneLab bioinformatics processing pipeline for small RNA sequencing has been adapted from the NFCore smrnaseq pipeline ( https://hub.docker.com/r/nfcore/smrnaseq/ )
+Note: This small RNA sequencing plan has been adapted from the NFCore smrnaseq pipeline ( https://hub.docker.com/r/nfcore/smrnaseq/ )
 
 Quick Start
 
