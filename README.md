@@ -1,4 +1,4 @@
-# smallRNAseq plan A, B and C
+# smallRNAseq plan A, B, C and Options D which is the mirDeep2 centric pipeline
 
 As we explore different small RNAseq analysis pipelines we start by breaking down the NF_Core small RNAseq pipeline to help us understand how it's working. 
 Writing up these early stages are good practice while developing bioinformatics processing pipelines even if they don't make it into the final code.
@@ -20,6 +20,9 @@ See the Repository Links descriptions below for more information.
 **The image below outlines the initial pipeline used to align and quantify microRNA**
 
 ![deconstructing the nf_core_smRNAseq pipeline](/smallRNAseq_analysis_pipeline_v1_NF_smRNAseq.png)
+
+
+Work continues on the mirDeep2 and mirDeep-P2 plant-specific brach as part of OSDR. 
 
 
 Developed and maintained by:
