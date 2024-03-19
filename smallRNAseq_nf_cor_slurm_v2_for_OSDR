@@ -1,5 +1,5 @@
 ## First log onto the data processing server (N288 cluster). 
-Navigate to the test folder via commandline.
+Navigate to the test folder via command line.
 The commands should run in a bash / conda environment.
 
 First compile your run sheet from a GLDS / OSDR archive. 
@@ -8,7 +8,7 @@ Location of dp_tools on dp_server /global/smf/miniconda38_admin/envs/dp_tools_04
 
 ##
 ---
-# More infromation found at dp_tools -> https://j-81.github.io/dp_tools/dp_tools.html
+# More information found at dp_tools -> https://j-81.github.io/dp_tools/dp_tools.html
 # Import the necessary modules
 import dp_tools
 
@@ -29,7 +29,7 @@ runsheet.to_csv("runsheet.csv", index=False)
 
 ##
 ---
-## The Following bash script should install all dependancies (eg conda) and then 
+## The Following bash script should install all dependencies (eg conda) and then 
 
 ```bash
 #!/bin/bash
