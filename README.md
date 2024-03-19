@@ -17,6 +17,8 @@ However, more work needs to be done such as making a snakemate wrapper to help p
 
 See the Repository Links descriptions below for more information. 
 
+**The image below outlines the initial pipeline used to align and quantify microRNA**
+
 ![deconstructing the nf_core_smRNAseq pipeline](/smallRNAseq_analysis_pipeline_v1_NF_smRNAseq.png)
 
 
