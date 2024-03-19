@@ -1,17 +1,23 @@
-# smallRNAseq
-Practice making a 'GeneLab' stlye bioinformatics processing pipeline for NF_smRNAseq analysis
-The document XXXX holds an overview and example commands for how GeneLab processes small RNAseq datasets. 
+# smallRNAseq plan A
+
+As we explore different small RNAseq analysis pipelines we start by breaking down the NF_Core small RNAseq pipeline to help us understand how it's working. 
+Writing up these early stages are good practice while developing bioinformatics processing pipelines even if they don't make it into the final code.
+
+Initially, the NF_core_smallRNA_pipeline was assessed and then broken down into its different components, (For more information see [smallRNAseq_analysis_pipeline_v1_NF_smRNAseq document](https://github.com/dr-richard-barker/smrRNAseq/blob/main/smallRNAseq_analysis_pipeline_v1_NF_smRNAseq.png))
+
+
+The document (NF_core_smallRNA_pipeline) holds a summary of the NF_cor_small RNAseq pipeline.
+The example commands were created to help test its effect on accuracy using synthetic small RNAseq data from SRA. 
+
+
+The second document contains instructions for installing and running parts if the NF_smRNAseq workflow.
+[link to OSDR and SLURM code integration plan](https://github.com/dr-richard-barker/smrRNAseq/blob/main/smallRNAseq_nf_cor_slurm_v2_for_OSDR)
+
+
 See the Repository Links descriptions below for more information. 
-Processed data output files and processing code will provided for each GLDS dataset along with the processed data in the GeneLab Data Systems (GLDS) repository.
 
-Repository Links
-Pipeline_XXXX_Versions
+![deconstructing the nf_core_smRNAseq pipeline](/smallRNAseq_analysis_pipeline_v1_NF_smRNAseq.png)
 
-smallRNAseq analysis pipeline_v1_NF_smRNAseq.png
 
-Contains the current and previous GeneLab small RNAseq data processing pipeline (NF_smrnaseq) versions documentation
-XXX_Workflow_Documentation
-
-Contains instructions for installing and running the GeneLab NF_smRNAseq workflow
 Developed and maintained by:
 Richard John Barker
